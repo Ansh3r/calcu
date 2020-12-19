@@ -1,0 +1,116 @@
+﻿<Window x:Class="WpfApp1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApp1"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="700" Width="700"
+        Background="#363638"
+        WindowStartupLocation="CenterScreen"
+        Name="MainWin"
+        d:DataContext="{d:DesignInstance local:ViewModel}">
+
+    <Grid Margin="10 10" Background="#363638">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" BorderBrush="Aqua" BorderThickness="1" Margin="5, 0">
+            <TextBox Text="{Binding TextValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,
+                     ValidatesOnDataErrors=True}"  
+                     Style="{StaticResource TextBoxStyle}"
+                     TextAlignment="Right" VerticalContentAlignment="Center" Padding="5"/>
+        </Border>
+        <Button Grid.Column="0" Grid.Row="1" Content="MR" Command="{Binding TakeMemory}" Style="{StaticResource ButtonStyle}"/>
+        <Button Grid.Column="1" Grid.Row="1" Content="MS" Command="{Binding SaveMemory}" Style="{StaticResource ButtonStyle}"/>
+        <Button Grid.Column="2" Grid.Row="1" Content="MC" Command="{Binding ClearMemory}" Style="{StaticResource ButtonStyle}"/>
+        <Button Grid.Column="0" Grid.Row="2" Content="*" Command="{Binding AddMathAction}" Style="{StaticResource ButtonStyle}"/>
+        <Button Grid.Column="1" Grid.Row="2" Content="-" Command="{Binding AddMathAction}" Style="{StaticResource ButtonStyle}"/>
+        <Button Grid.Column="2" Grid.Row="2" Content="+" Command="{Binding AddMathAction}" Style="{StaticResource ButtonStyle}"/>
+        <Button Grid.Column="0" Grid.Row="3" Content="/" Command="{Binding AddMathAction}" Style="{StaticResource ButtonStyle}"/>
+        <Button Grid.Column="1" Grid.Row="3" Content="CE" Command="{Binding Clear}" Style="{StaticResource ButtonStyle}" Grid.ColumnSpan="2"/>
+
+        <Button Grid.Column="0" Grid.Row="4" Content="1" Command="{Binding AddNumber}" Style="{StaticResource ButtonStyle}"/>
+        <Button Grid.Column="1" Grid.Row="4" Content="2" Command="{Binding AddNumber}" Style="{StaticResource ButtonStyle}"/>
+        <Button Grid.Column="2" Grid.Row="4" Content="3" Command="{Binding AddNumber}" Style="{StaticResource ButtonStyle}"/>
+        <Button Grid.Column="0" Grid.Row="5" Content="4" Command="{Binding AddNumber}" Style="{StaticResource ButtonStyle}"/>
+        <Button Grid.Column="1" Grid.Row="5" Content="5" Command="{Binding AddNumber}" Style="{StaticResource ButtonStyle}"/>
+        <Button Grid.Column="2" Grid.Row="5" Content="6" Command="{Binding AddNumber}" Style="{StaticResource ButtonStyle}"/>
+        <Button Grid.Column="0" Grid.Row="6" Content="7" Command="{Binding AddNumber}" Style="{StaticResource ButtonStyle}"/>
+        <Button Grid.Column="1" Grid.Row="6" Content="8" Command="{Binding AddNumber}" Style="{StaticResource ButtonStyle}"/>
+        <Button Grid.Column="2" Grid.Row="6" Content="9" Command="{Binding AddNumber}" Style="{StaticResource ButtonStyle}"/>
+        <Button Grid.Column="0" Grid.Row="7" Content="0" Command="{Binding AddNumber}" Style="{StaticResource ButtonStyle}"  Grid.ColumnSpan="2"/>
+        <Button Grid.Column="2" Grid.Row="7" Content="=" Command="{Binding Calculate}" Style="{StaticResource ButtonStyle}"/>
+        <TabControl Grid.Column="3"
+                    Grid.Row="0" Grid.RowSpan="7"
+                    Background="#363638">
+            <TabItem Foreground="MediumVioletRed" 
+                     Background="#363638"
+                     Header="Журнал" FontSize="20">
+                <ScrollViewer>
+                    <ItemsControl ItemsSource="{Binding Journal.ExpressionsHistory, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="10">
+                                    <TextBox Text="{Binding Action, Mode=OneWay}"
+                                             Style="{StaticResource TextBoxStyle}"
+                                             TextAlignment="Right"
+                                             VerticalContentAlignment="Center"
+                                             IsReadOnly="True"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Background="#363638" Foreground="MediumVioletRed" 
+                     Header="Память" FontSize="20">
+                <ScrollViewer>
+                    <ItemsControl ItemsSource="{Binding Memory.MemoryObservableCollection, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                  AlternationCount="150">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="10">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <TextBox Grid.Row="0" 
+                                             Name="TextBoxMemory"
+                                             Text="{Binding ., Mode=OneWay}"
+                                             Style="{StaticResource TextBoxStyle}"
+                                             TextAlignment="Right"
+                                             VerticalContentAlignment="Center"
+                                             Tag="{Binding Path=(ItemsControl.AlternationIndex), 
+                                             RelativeSource={RelativeSource TemplatedParent}}"
+                                             IsReadOnly="True"/>
+                                    <Button Grid.Row="1" 
+                                            Content=" Delete item of memory"
+                                            DataContext="{Binding ElementName=MainWin, Path=DataContext}"
+                                            Command="{Binding DeleteMemoryElement}"
+                                            CommandParameter="{Binding ElementName=TextBoxMemory}"
+                                            Style="{StaticResource ButtonStyle}"></Button>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+        
+    </Grid>
+</Window>
